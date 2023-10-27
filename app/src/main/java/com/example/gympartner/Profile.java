@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -16,8 +17,10 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -28,10 +31,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Profile extends AppCompatActivity {
     Spinner spinnerGoal;
@@ -43,6 +49,11 @@ public class Profile extends AppCompatActivity {
     private static final int GALLERY_REQUEST_CODE = 1;
     private ImageView profileImage;
     private Uri selectedImageUri;
+    String userId;
+
+    private CircleImageView userProfileimage;
+
+    private static final int GalleryPick=1;
 
     Uri imageUri;
     StorageReference storageReference;
@@ -61,6 +72,24 @@ public class Profile extends AppCompatActivity {
         spinnerGoal = findViewById(R.id.spinnerGoal);
         EditText etGymLocations = findViewById(R.id.etGymLocations);
         btnSave = findViewById(R.id.btnSave);
+
+        userProfileimage=findViewById(R.id.profileImage);
+
+
+        storageReference=FirebaseStorage.getInstance().getReference().child("Profile_images");
+
+
+        userProfileimage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent galleryIntent=new Intent();
+                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                galleryIntent.setType("image/*");
+                startActivityForResult(galleryIntent,GalleryPick);
+            }
+        });
+
+
 
 
 // upload photo begin
@@ -120,7 +149,7 @@ public class Profile extends AppCompatActivity {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            String userId = user.getUid();
+            userId = user.getUid();
 
             // Create a reference to the Firebase Realtime Database
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -144,6 +173,7 @@ public class Profile extends AppCompatActivity {
                         String gender = dataSnapshot.child("gender").getValue(String.class);
                         String goal = dataSnapshot.child("goal").getValue(String.class);
                         String gymLocations = dataSnapshot.child("gymLocations").getValue(String.class);
+                        String profileImage=dataSnapshot.child("profilePhotoUrl").getValue().toString();
 
                         // Assuming you have EditText fields for name, gender, goal, and gymLocations
 //                        EditText etName = findViewById(R.id.etName);
@@ -152,6 +182,7 @@ public class Profile extends AppCompatActivity {
 //                        EditText etGymLocations = findViewById(R.id.etGymLocations);
 
                         // Set the retrieved data into the UI components
+                        Picasso.get().load(profileImage).into(userProfileimage);
                         etName.setText(name);
                         etGender.setText(gender);
 
@@ -249,6 +280,40 @@ public class Profile extends AppCompatActivity {
         }
     }
 
+//        @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        Log.d("requestCode","This"+requestCode+" userId"+data);
+//
+//        if (requestCode == GalleryPick && resultCode==RESULT_OK &&  data != null){
+//
+//            Uri imageUri = data.getData();
+////            CropImage.activity()
+////                    .setGuidelines(CropImageView.Guidelines.ON)
+////                    .start(this);
+//            Toast.makeText(this, "This"+imageUri+" userId"+userId, Toast.LENGTH_SHORT).show();
+//
+//            Log.d("uderId","This"+imageUri+" userId"+userId);
+//            userProfileimage.setImageURI(imageUri);
+//
+//            StorageReference filepath=storageReference.child(userId+".jpg");
+//            filepath.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+//                @Override
+//                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+//                    if(task.isSuccessful()){
+//                        Toast.makeText(Profile.this, "Profile image uploaded", Toast.LENGTH_SHORT).show();
+//                    }else{
+//                        String message=task.getException().toString();
+//                        Toast.makeText(Profile.this, "Error"+message, Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            });
+//
+//
+//        }
+//    }
+
     private void uploadImage() {
 
         progressDialog = new ProgressDialog(this);
@@ -269,7 +334,7 @@ public class Profile extends AppCompatActivity {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                        profileImage.setImageURI(null);
+                        profileImage.setImageURI(imageUri);
                         Toast.makeText(Profile.this,"Successfully Uploaded",Toast.LENGTH_SHORT).show();
 
                         //save image url
@@ -308,6 +373,10 @@ public class Profile extends AppCompatActivity {
                 });
 
     }
+
+
+
+
 
 //    private void selectImage1() {
 //        Intent galleryIntent = new Intent(Intent.ACTION_PICK);

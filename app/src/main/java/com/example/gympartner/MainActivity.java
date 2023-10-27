@@ -24,7 +24,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button button,btnfind;
+    Button button,btnfind,btnChat;
     private RecyclerView recyclerViewFriendRequests;
     private FriendRequestsAdapter friendRequestsAdapter;
     private List<FriendRequest> friendRequests;
@@ -36,6 +36,14 @@ public class MainActivity extends AppCompatActivity {
 
         button=findViewById(R.id.button);
         btnfind=findViewById(R.id.btnfind);
+        btnChat=findViewById(R.id.btnChat);
+        btnChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this,ChatMainActivity.class));
+                finish();
+            }
+        });
         Button checkFriendRequestsButton = findViewById(R.id.checkFriendRequestsButton); // Add this line
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
