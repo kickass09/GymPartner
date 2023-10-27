@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">GymPartner</string>
+
+    <string-array name="goal_options">
+        <item>Gain Weight/Muscle</item>
+        <item>Lose Weight/Fat</item>
+    </string-array>
+</resources>
