@@ -1,12 +1,17 @@
 package com.example.gympartner;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -29,6 +34,44 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
         FriendRequest friendRequest = friendRequests.get(position);
         holder.textViewFriendName.setText(friendRequest.getName());
         holder.textViewFriendGoal.setText(friendRequest.getGoal());
+
+        // Get references to the accept and reject buttons
+        Button buttonAccept = holder.buttonAccept;
+        Button buttonReject = holder.buttonReject;
+
+        buttonAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Handle the Accept button click
+                updateRequestStatus(friendRequest.getRequestId(), "accepted");
+            }
+        });
+
+        buttonReject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Handle the Reject button click
+                updateRequestStatus(friendRequest.getRequestId(), "rejected");
+            }
+        });
+    }
+
+    private void updateRequestStatus(String requestId, String newStatus) {
+        Log.d("requestId",requestId);
+        if (requestId == null) {
+            // Handle the case where requestId is null
+            // You can log an error message or take appropriate action
+
+            return;
+        }
+        // Implement Firebase Database logic to update the request status
+        DatabaseReference requestsRef = FirebaseDatabase.getInstance().getReference("friend_requests");
+
+        // Create a reference to the specific request
+        DatabaseReference requestRef = requestsRef.child(requestId);
+
+        // Update the status to the new value
+        requestRef.child("status").setValue(newStatus);
     }
 
     @Override
@@ -39,11 +82,14 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textViewFriendName;
         TextView textViewFriendGoal;
+        Button buttonAccept,buttonReject;
 
         public ViewHolder(View itemView) {
             super(itemView);
             textViewFriendName = itemView.findViewById(R.id.textViewFriendName);
             textViewFriendGoal = itemView.findViewById(R.id.textViewFriendGoal);
+            buttonAccept=itemView.findViewById(R.id.buttonAccept);
+            buttonReject=itemView.findViewById(R.id.buttonReject);
         }
     }
 }

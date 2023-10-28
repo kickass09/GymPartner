@@ -135,8 +135,10 @@ public class MainActivity extends AppCompatActivity {
                                 String name = userDataSnapshot.child("name").getValue(String.class);
                                 String goal = userDataSnapshot.child("goal").getValue(String.class);
 
+                                String requestId = requestSnapshot.getKey();
+
                                 // Create a new FriendRequest instance with name and goal
-                                FriendRequest friendRequest = new FriendRequest(senderId, receiverId, status, name, goal);
+                                FriendRequest friendRequest = new FriendRequest(requestId,senderId, receiverId, status, name, goal);
 
                                 // Add the friend request to the list
                                 friendRequests.add(friendRequest);

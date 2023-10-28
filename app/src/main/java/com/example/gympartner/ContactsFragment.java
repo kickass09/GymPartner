@@ -3,6 +3,8 @@ package com.example.gympartner;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,9 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class ContactsFragment extends Fragment {
+
+    private View ContactView;
+    private RecyclerView mycontactsList;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -59,6 +64,18 @@ public class ContactsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contacts, container, false);
+        ContactView = inflater.inflate(R.layout.fragment_contacts, container, false);
+
+        mycontactsList=(RecyclerView) ContactView.findViewById(R.id.contacts_list);
+        mycontactsList.setLayoutManager(new LinearLayoutManager(getContext()));
+        return ContactView;
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+
     }
 }

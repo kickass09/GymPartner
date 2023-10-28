@@ -43,7 +43,14 @@ public class UserProfileActivity extends AppCompatActivity {
                 // Handle the button click event here
                 // You can implement the logic to send a request to the user with 'userId'
                 //sendRequestToUser(userId);
-                sendFriendRequest(currentUserId,userId);
+                if(sendRequestButton.getText().toString().equals("Cancel Request")){
+                    sendRequestCancel(currentUserId,userId);
+                    sendRequestButton.setText("Send Request");
+                }else{
+                    sendFriendRequest(currentUserId,userId);
+                    sendRequestButton.setText("Cancel Request");
+                }
+
             }
         });
 
@@ -73,6 +80,37 @@ public class UserProfileActivity extends AppCompatActivity {
                 // Handle errors
             }
         });
+    }
+
+    private void sendRequestCancel(String currentUserId, String userId) {
+        DatabaseReference friendRequestsRef = FirebaseDatabase.getInstance().getReference("friend_requests");
+
+        // Query the friend requests to find the specific request to delete
+        friendRequestsRef
+                .orderByChild("senderId")
+                .equalTo(currentUserId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
+                            String receiverId = requestSnapshot.child("receiverId").getValue(String.class);
+
+                            if (receiverId.equals(userId)) {
+                                // Found the request to cancel, delete it
+                                String requestId = requestSnapshot.getKey();
+                                friendRequestsRef.child(requestId).removeValue();
+
+                                // Notify the user that the request has been canceled
+                                sendNotificationToUser(userId, "Your friend request has been canceled.");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Handle errors, such as database read issues.
+                    }
+                });
     }
 
     // Implement the logic to send a request to the user with the specified 'userId'

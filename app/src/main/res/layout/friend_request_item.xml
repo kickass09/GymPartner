@@ -19,6 +19,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Friend's Goal" />
+
+        <Button
+            android:id="@+id/buttonAccept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Accept" />
+
+        <Button
+            android:id="@+id/buttonReject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reject" />
     </LinearLayout>
 
 </LinearLayout>

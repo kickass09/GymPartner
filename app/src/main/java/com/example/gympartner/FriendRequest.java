@@ -2,6 +2,7 @@ package com.example.gympartner;
 
 public class FriendRequest {
 
+    private String requestId;
     private String senderId;   // ID of the user who sent the request
     private String receiverId; // ID of the user who should receive the request
     private String status;     // Status of the request (e.g., "pending", "accepted", "rejected")
@@ -14,6 +15,15 @@ public class FriendRequest {
 
     public String getName() {
         return name;
+    }
+
+    public FriendRequest(String requestId, String senderId, String receiverId, String status, String name, String goal) {
+        this.requestId = requestId;
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+        this.status = status;
+        this.name = name;
+        this.goal = goal;
     }
 
     public void setName(String name) {
@@ -40,6 +50,14 @@ public class FriendRequest {
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.status = status;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 
     public String getSenderId() {
