@@ -1,5 +1,6 @@
 package com.example.gympartner;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -32,7 +33,7 @@ import java.util.List;
  * Use the {@link ChatsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ChatsFragment extends Fragment {
+public class ChatsFragment extends Fragment implements UserProfileAdapter.UserProfileClickListener{
 
     private RecyclerView recyclerViewChats;
     private UserProfileAdapter userProfileAdapter;
@@ -89,7 +90,9 @@ public class ChatsFragment extends Fragment {
         userProfiles = new ArrayList<>();
 
         // Initialize the adapter and set it on the RecyclerView
-        userProfileAdapter = new UserProfileAdapter(userProfiles);
+        //userProfileAdapter = new UserProfileAdapter(userProfiles);
+
+        userProfileAdapter = new UserProfileAdapter(getActivity(), userProfiles, this); // Pass 'this' to set the click listener
         recyclerViewChats.setAdapter(userProfileAdapter);
         recyclerViewChats.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -98,6 +101,15 @@ public class ChatsFragment extends Fragment {
         fetchAndPopulateUserProfiles();
 
         return view;
+    }
+
+    @Override
+    public void onUserProfileClick(String userId, String name) {
+        // Start the ChatActivity and pass userId and name as extras
+        Intent intent = new Intent(getActivity(), ChatActivity.class); // Use 'getActivity()' to get the context
+        intent.putExtra("userId", userId);
+        intent.putExtra("name", name);
+        startActivity(intent);
     }
 
 //    private void fetchAndPopulateUserProfiles() {

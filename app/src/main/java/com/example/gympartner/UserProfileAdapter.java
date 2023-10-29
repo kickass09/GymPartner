@@ -16,6 +16,20 @@ import java.util.List;
 
 public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.ViewHolder> {
     private List<UserProfile> userProfiles;
+    private Context context;
+    private UserProfileClickListener clickListener;
+
+    public interface UserProfileClickListener {
+        void onUserProfileClick(String userId, String name);
+    }
+
+    public UserProfileAdapter(Context context, List<UserProfile> userProfiles, UserProfileClickListener clickListener) {
+        this.context = context;
+        this.userProfiles = userProfiles;
+        this.clickListener = clickListener;
+    }
+
+
 
     public UserProfileAdapter(List<UserProfile> userProfiles) {
         this.userProfiles = userProfiles;
@@ -46,6 +60,16 @@ public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.
             holder.profileImageView.setImageResource(R.drawable.profile_image);
         }
 
+        // Set a click listener to open the ChatActivity
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Pass userId and name to the clickListener interface
+                clickListener.onUserProfileClick(userProfile.getUserId(), userProfile.getName());
+            }
+        });
+
+
 
     }
 
@@ -53,6 +77,8 @@ public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.
     public int getItemCount() {
         return userProfiles.size();
     }
+
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;
