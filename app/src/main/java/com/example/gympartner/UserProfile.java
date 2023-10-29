@@ -6,6 +6,7 @@ public class UserProfile {
     public String gender;
     public String goal;
     public String gymLocations;
+    public String profilePicUrl;
 
     public UserProfile() {
         // Default constructor required for calls to DataSnapshot.getValue(UserProfile.class)
@@ -30,6 +31,23 @@ public class UserProfile {
         this.gender = gender;
         this.goal = goal;
         this.gymLocations = gymLocations;
+    }
+
+    public UserProfile(String userId, String name, String gender, String goal, String gymLocations, String profilePicUrl) {
+        this.userId = userId;
+        this.name = name;
+        this.gender = gender;
+        this.goal = goal;
+        this.gymLocations = gymLocations;
+        this.profilePicUrl = profilePicUrl;
+    }
+
+    public String getProfilePicUrl() {
+        return profilePicUrl;
+    }
+
+    public void setProfilePicUrl(String profilePicUrl) {
+        this.profilePicUrl = profilePicUrl;
     }
 
     public String getUserId() {

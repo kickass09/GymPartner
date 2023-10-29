@@ -17,8 +17,7 @@ import android.view.ViewGroup;
  */
 public class ContactsFragment extends Fragment {
 
-    private View ContactView;
-    private RecyclerView mycontactsList;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -64,18 +63,10 @@ public class ContactsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        ContactView = inflater.inflate(R.layout.fragment_contacts, container, false);
-
-        mycontactsList=(RecyclerView) ContactView.findViewById(R.id.contacts_list);
-        mycontactsList.setLayoutManager(new LinearLayoutManager(getContext()));
-        return ContactView;
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
+        return inflater.inflate(R.layout.fragment_contacts, container, false);
 
     }
+
+
+
 }

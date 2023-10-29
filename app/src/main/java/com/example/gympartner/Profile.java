@@ -173,7 +173,7 @@ public class Profile extends AppCompatActivity {
                         String gender = dataSnapshot.child("gender").getValue(String.class);
                         String goal = dataSnapshot.child("goal").getValue(String.class);
                         String gymLocations = dataSnapshot.child("gymLocations").getValue(String.class);
-                        String profileImage=dataSnapshot.child("profilePhotoUrl").getValue().toString();
+                        String profileImage=dataSnapshot.child("profilePhotoUrl").getValue(String.class);
 
                         // Assuming you have EditText fields for name, gender, goal, and gymLocations
 //                        EditText etName = findViewById(R.id.etName);
@@ -218,11 +218,14 @@ public class Profile extends AppCompatActivity {
                 String gender = etGender.getText().toString();
                 String goal = spinnerGoal.getSelectedItem().toString();
                 String gymLocations = etGymLocations.getText().toString();
+                String profilePicUrl=imageUri.toString();
                 // Get the current user's unique ID
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 String userId = user.getUid();
 
-                UserProfile userProfile = new UserProfile(userId,name, gender, goal, gymLocations);
+                UserProfile userProfile = new UserProfile(userId, name, gender, goal, gymLocations, profilePicUrl);
+
+                //UserProfile userProfile = new UserProfile(userId,name, gender, goal, gymLocations);
                 profileRef.setValue(userProfile);
 
 
@@ -280,6 +283,8 @@ public class Profile extends AppCompatActivity {
         }
     }
 
+
+
 //        @Override
 //    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 //        super.onActivityResult(requestCode, resultCode, data);
@@ -290,6 +295,7 @@ public class Profile extends AppCompatActivity {
 //
 //            Uri imageUri = data.getData();
 ////            CropImage.activity()
+
 ////                    .setGuidelines(CropImageView.Guidelines.ON)
 ////                    .start(this);
 //            Toast.makeText(this, "This"+imageUri+" userId"+userId, Toast.LENGTH_SHORT).show();
